@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="/styles/theme.css">
+  <link rel="stylesheet" href="/styles/auth-form.css">
+</head>
+<body>
+  <button id="theme-toggle" aria-label="Toggle theme"
+      style="position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:1.5rem;">
+      🌙
+  </button>
+
+  <div class="form-container">
+    <!-- Form Heading -->
+    <h1 class="form-title">Welcome Back</h1>
+    <p class="form-subtitle">Login to your account</p>
+
+    <form class="auth-form" method="POST" action="/auth/login" novalidate>
+      <div class="form-group">
+        <label for="identifier">Email or Username</label>
+        <input type="text" id="identifier" name="identifier" placeholder="Enter your email or username" required autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="auth-footer">
+      Not a User? <a href="/auth/register">Register Your Account</a>
+    </div>
+  </div>
+
+  <script src="/scripts/auth-form.js"></script>
+</body>
+</html>

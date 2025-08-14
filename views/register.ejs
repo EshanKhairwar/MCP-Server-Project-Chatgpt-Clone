@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +8,43 @@
     <link rel="stylesheet" href="/styles/theme.css">
     <link rel="stylesheet" href="/styles/auth-form.css">
 </head>
+
 <body>
-    <button id="theme-toggle" aria-label="Toggle theme" style="position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:1.5rem;">
+    <button id="theme-toggle" aria-label="Toggle theme"
+        style="position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:1.5rem;">
         🌙
     </button>
+
     <div class="form-container">
-        <div class="form-title">Create Account</div>
-        <form class="auth-form" method="POST" action="/register">
-            <input type="email" name="email" placeholder="Email" required autocomplete="email">
-            <input type="text" name="username" placeholder="Username" required autocomplete="username">
-            <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
+        <!-- Form Heading -->
+        <h1 class="form-title">Create Account</h1>
+        <p class="form-subtitle">Sign up to start using our platform</p>
+
+        <form class="auth-form" method="POST" action="/auth/register" novalidate>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Choose a username" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="new-password">
+            </div>
+
             <button type="submit">Register</button>
         </form>
-    </div>
-    <script src="/scripts/auth-form.js"></script>
 
+        <div class="auth-footer">
+            Already have an account? <a href="/auth/login">Login</a>
+        </div>
+    </div>
+
+    <script src="/scripts/auth-form.js"></script>
 </body>
+
 </html>

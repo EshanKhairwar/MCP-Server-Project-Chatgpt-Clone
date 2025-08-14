@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini-style Chat UI</title>
+    <!-- Use Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/chat.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar for conversation history -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h2>New Chat</h2>
+            </div>
+            <ul id="conversation-list"></ul>
+        </nav>
+
+        <!-- Main chat content area -->
+        <main id="main-content">
+            <div id="chat-header">
+                <button id="sidebar-toggle">&#9776;</button>
+                <h1>Gemini UI</h1>
+            </div>
+
+            <!-- Messages display area -->
+            <div id="chat-messages">
+                <div class="message model">
+                    <div class="message-icon">AI</div>
+                    <div class="message-content">
+                        Hello there! I'm a simple AI chat interface. How can I help you today?
+                    </div>
+                </div>
+            </div>
+
+            <!-- User input form -->
+            <div id="input-container">
+                <textarea id="user-input" placeholder="Enter a prompt here"></textarea>
+                <button id="send-button">Send</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Theme toggle button -->
+    <button id="theme-toggle">🌙</button>
+
+<script src="/scripts/chat.js"></script>
+</body>
+</html>
