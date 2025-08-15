@@ -28,10 +28,7 @@ async function postRegisterController(req, res) {
   
   res.cookie('token',token)
   
-  return res.status(201).json({
-    message:"User Created Successfully!!!",
-    user
-  })
+  return res.redirect('/auth/login')
 }
 
 async function getLoginController(req,res){
