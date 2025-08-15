@@ -1,97 +1,207 @@
-      //   JavaScript for UI Functionality
-        //
-        const app = document.getElementById('app');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggleBtn = document.getElementById('sidebar-toggle');
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const conversationList = document.getElementById('conversation-list');
-        const chatMessages = document.getElementById('chat-messages');
-        const userInput = document.getElementById('user-input');
-        const sendButton = document.getElementById('send-button');
+   // ===== Socket.IO Setup =====
 
-        // --- Theme Toggling ---
-        function toggleTheme() {
-            const isDark = document.body.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                document.body.removeAttribute('data-theme');
-                themeToggleBtn.textContent = '🌙';
-            } else {
-                document.body.setAttribute('data-theme', 'dark');
-                themeToggleBtn.textContent = '☀️';
-            }
+
+    // ===== DOM Elements =====
+    const app = document.getElementById('app');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const newChatBtn = document.getElementById('new-chat-btn');
+    const conversationList = document.getElementById('conversation-list');
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    const initialMessage = `
+        <div class="message model">
+            <div class="message-icon">AI</div>
+            <div class="message-content">
+                Hello there! I'm a simple AI chat interface. How can I help you today?
+            </div>
+        </div>
+    `;
+
+    // ===== Store All Conversations =====
+    let conversations = [
+        {
+            id: Date.now(),
+            title: "New Chat",
+            lastMessage: "Hello there! I'm a simple AI chat interface. How can I help you today?",
+            messages: [
+                { sender: "model", text: "Hello there! I'm a simple AI chat interface. How can I help you today?" }
+            ]
         }
-        themeToggleBtn.addEventListener('click', toggleTheme);
+    ];
+    let currentConversationId = conversations[0].id;
 
-        // --- Sidebar Toggling ---
-        function toggleSidebar() {
-            sidebar.classList.toggle('hidden');
+    // ===== Theme Toggling =====
+    function toggleTheme() {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            document.body.removeAttribute('data-theme');
+            themeToggleBtn.textContent = '🌙';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggleBtn.textContent = '☀️';
         }
-        sidebarToggleBtn.addEventListener('click', toggleSidebar);
+    }
+    themeToggleBtn.addEventListener('click', toggleTheme);
 
-        // --- Conversation List Logic ---
-        const conversations = [
-            { id: 1, title: 'Introduction to Web Dev', lastMessage: 'What is a CSS Flexbox?' },
-            { id: 2, title: 'Summer Vacation Plans', lastMessage: 'I am planning a trip to Italy.' },
-            { id: 3, title: 'Recipe for Lasagna', lastMessage: 'What are the ingredients?' },
-            { id: 4, title: 'The History of Rome', lastMessage: 'Can you tell me about the Roman Empire?' },
-            { id: 5, title: 'Learning Python', lastMessage: 'Write a simple "Hello, World!" script.' },
-            { id: 6, title: 'Modern Art Movements', lastMessage: 'Tell me about Cubism.' },
-        ];
+    // ===== Sidebar Toggling =====
+    function toggleSidebar() {
+        sidebar.classList.toggle('hidden');
+    }
+    sidebarToggleBtn.addEventListener('click', toggleSidebar);
 
-        function renderConversations() {
-            conversationList.innerHTML = ''; // Clear existing list
-            conversations.forEach(conv => {
-                const listItem = document.createElement('li');
-                listItem.classList.add('conversation-item');
-                listItem.dataset.id = conv.id;
-                listItem.innerHTML = `<h3>${conv.title}</h3><p>${conv.lastMessage}</p>`;
-                conversationList.appendChild(listItem);
-            });
+    // ===== New Chat =====
+    function createNewChat() {
+        const newConv = {
+            id: Date.now(),
+            title: `Chat ${conversations.length + 1}`,
+            lastMessage: "",
+            messages: []
+        };
+        conversations.push(newConv);
+        currentConversationId = newConv.id;
+        chatMessages.innerHTML = initialMessage;
+        userInput.value = '';
+        renderConversations();
+    }
+    newChatBtn.addEventListener('click', createNewChat);
+
+    // ===== Render Conversations in Sidebar =====
+    function renderConversations() {
+        conversationList.innerHTML = '';
+        conversations.forEach(conv => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('conversation-item');
+            listItem.dataset.id = conv.id;
+            listItem.innerHTML = `
+                <h3>${conv.title}</h3>
+                <p>${conv.lastMessage || 'No messages yet'}</p>
+            `;
+            listItem.addEventListener('click', () => loadConversation(conv.id));
+            conversationList.appendChild(listItem);
+        });
+    }
+
+    // ===== Load Selected Conversation =====
+    function loadConversation(id) {
+        currentConversationId = id;
+        const conv = conversations.find(c => c.id === id);
+        chatMessages.innerHTML = '';
+        conv.messages.forEach(msg => addMessage(msg.text, msg.sender, false));
+    }
+
+    // ===== Add Message to Chat & Conversations =====
+    function addMessage(text, sender, save = true) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+
+        const iconDiv = document.createElement('div');
+        iconDiv.classList.add('message-icon');
+        iconDiv.textContent = sender === 'user' ? 'You' : 'AI';
+
+        const contentDiv = document.createElement('div');
+        contentDiv.classList.add('message-content');
+        contentDiv.textContent = text;
+
+        messageDiv.appendChild(iconDiv);
+        messageDiv.appendChild(contentDiv);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        if (save) {
+            const conv = conversations.find(c => c.id === currentConversationId);
+            conv.messages.push({ sender, text });
+            conv.lastMessage = text;
+            renderConversations();
         }
+    }
 
-        // --- Chat Message Logic ---
-        function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', sender);
-            
-            const iconDiv = document.createElement('div');
-            iconDiv.classList.add('message-icon');
-            iconDiv.textContent = sender === 'user' ? 'You' : 'AI';
+    // ===== Handle Sending Message =====
+    function handleSendMessage() {
+        const messageText = userInput.value.trim();
+        if (!messageText) return;
 
-            const contentDiv = document.createElement('div');
-            contentDiv.classList.add('message-content');
-            contentDiv.textContent = text;
-            
-            messageDiv.appendChild(iconDiv);
-            messageDiv.appendChild(contentDiv);
-            chatMessages.appendChild(messageDiv);
+        addMessage(messageText, 'user');
+        userInput.value = '';
+        socket.emit('ai-message', messageText);
+    }
 
-            // Scroll to the bottom to show the new message
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+    // ===== Socket Listener for AI Response =====
+    socket.on('ai-message-response', (response) => {
+        addMessage(response, 'model');
+    });
+
+    // ===== Event Listeners =====
+    sendButton.addEventListener('click', handleSendMessage);
+    userInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            handleSendMessage();
         }
+    });
 
-        function handleSendMessage() {
-            const messageText = userInput.value.trim();
-            if (messageText) {
-                // Add user message to the chat
-                addMessage(messageText, 'user');
-                userInput.value = '';
+    // ===== Delete Conversation =====
+function deleteConversation(id) {
+    conversations = conversations.filter(conv => conv.id !== id);
 
-                // Simulate an AI response after a short delay
-                setTimeout(() => {
-                    addMessage("This is a simulated AI response to your message: '" + messageText + "'.", 'model');
-                }, 1000);
-            }
-        }
+    // If the deleted one was the current, load another conversation
+    if (currentConversationId === id && conversations.length > 0) {
+        currentConversationId = conversations[0].id;
+        loadConversation(currentConversationId);
+    } else if (conversations.length === 0) {
+        // No chats left — reset to default
+        const newConv = {
+            id: Date.now(),
+            title: "New Chat",
+            lastMessage: "Hello there! I'm a simple AI chat interface. How can I help you today?",
+            messages: [
+                { sender: "model", text: "Hello there! I'm a simple AI chat interface. How can I help you today?" }
+            ]
+        };
+        conversations.push(newConv);
+        currentConversationId = newConv.id;
+        loadConversation(currentConversationId);
+    }
 
-        // --- Event Listeners ---
-        sendButton.addEventListener('click', handleSendMessage);
-        userInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault(); // Prevent a newline
-                handleSendMessage();
-            }
+    renderConversations();
+}
+
+// ===== Render Conversations in Sidebar =====
+function renderConversations() {
+    conversationList.innerHTML = '';
+    conversations.forEach(conv => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('conversation-item');
+        listItem.dataset.id = conv.id;
+
+        // Title & Last Message
+        const convInfo = document.createElement('div');
+        convInfo.classList.add('conv-info');
+        convInfo.innerHTML = `
+            <h3>${conv.title}</h3>
+            <p>${conv.lastMessage || 'No messages yet'}</p>
+        `;
+        convInfo.addEventListener('click', () => loadConversation(conv.id));
+
+        // Delete Button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '🗑️';
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering loadConversation
+            deleteConversation(conv.id);
         });
 
-        // Initial setup
-        renderConversations();
+        listItem.appendChild(convInfo);
+        listItem.appendChild(deleteBtn);
+        conversationList.appendChild(listItem);
+    });
+}
+
+
+    // ===== Initial Load =====
+    renderConversations();
+    loadConversation(currentConversationId);

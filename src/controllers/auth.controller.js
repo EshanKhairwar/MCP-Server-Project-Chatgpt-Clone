@@ -61,11 +61,13 @@ async function postLoginController(req, res) {
   // Set cookie
   res.cookie('token', token, { httpOnly: true });
 
-  return res.status(200).json({
-    message: "User Logged In Successfully",
-    user
-  });
+return res.redirect('/'); // Redirect to home page after successful login
+}
+
+async function userLogout(req,res){
+  res.clearCookie('token');
+  return res.redirect('/auth/login')
 }
 
 
-module.exports = { getRegisterController, postRegisterController,getLoginController, postLoginController };
+module.exports = { getRegisterController, postRegisterController,getLoginController, postLoginController,userLogout };

@@ -1,23 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini-style Chat UI</title>
+    <title>Hecta UI - Ask to time</title>
     <!-- Use Inter font from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles/chat.css">
 </head>
+
 <body>
     <div id="app">
         <!-- Sidebar for conversation history -->
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h2>New Chat</h2>
+                <button id="new-chat-btn" class="sidebar-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-plus">
+                        <path d="M5 12h14" />
+                        <path d="M12 5v14" />
+                    </svg>
+                    <span>New Chat</span>
+                </button>
+
+
             </div>
+
             <ul id="conversation-list"></ul>
+
+             <!-- Logout Button -->
+    <button id="logout-btn" class="sidebar-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-log-out">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+        <span>Logout</span>
+    </button>
         </nav>
 
         <!-- Main chat content area -->
@@ -47,7 +72,13 @@
 
     <!-- Theme toggle button -->
     <button id="theme-toggle">🌙</button>
-
-<script src="/scripts/chat.js"></script>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+        integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+        crossorigin="anonymous"></script>
+    <script>
+        const socket = io()
+    </script>
+    <script src="/scripts/chat.js"></script>
 </body>
+
 </html>
