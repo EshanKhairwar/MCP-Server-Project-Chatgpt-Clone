@@ -8,10 +8,10 @@ const app = express()
 
 // ===== CSP Middleware =====
 app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; font-src 'self' https:; img-src 'self' data:; connect-src 'self';"
-  );
+res.setHeader(
+  "Content-Security-Policy",
+  "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.socket.io; style-src 'self' 'unsafe-inline' https:; font-src 'self' https:; img-src 'self' data:; connect-src 'self' 'https://cdn.socket.io';"
+);
   next();
 });
 
