@@ -169,6 +169,30 @@ function deleteConversation(id) {
     renderConversations();
 }
 
+// Logout
+
+const logoutBtn = document.getElementById('logout-btn');
+
+logoutBtn.addEventListener('click', async () => {
+    try {
+        const response = await fetch('/auth/logout', {
+            method: 'GET',  // usually logout is a POST request
+            credentials: 'include', // send cookies if your auth uses them
+        });
+
+        if (response.ok) {
+            // Redirect to login page or home page after logout
+            window.location.href = '/auth/login';
+        } else {
+            const data = await response.json();
+            alert(data.message || 'Logout failed');
+        }
+    } catch (err) {
+        console.error('Logout error:', err);
+        alert('An error occurred during logout.');
+    }
+});
+
 // ===== Render Conversations in Sidebar =====
 function renderConversations() {
     conversationList.innerHTML = '';

@@ -9,7 +9,6 @@ function setupSocketServer(httpServer) {
 
     socket.on("ai-message", async (message) => {
       const result = await aiService.generateContent(message);
-      console.log(result);
       socket.emit("ai-message-response", result);
     });
 
